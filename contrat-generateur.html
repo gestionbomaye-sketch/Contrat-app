@@ -194,8 +194,8 @@
 
         .preview-content {
             padding: 40px;
-            max-height: 600px;
-            overflow-y: auto;
+            max-height: none;
+            overflow: visible;
             background: white;
             font-size: 0.9em;
             line-height: 1.6;
@@ -241,6 +241,15 @@
 
         .hidden {
             display: none;
+        }
+
+        @media print {
+            .preview-content {
+                page-break-after: always;
+            }
+            h4 {
+                page-break-before: avoid;
+            }
         }
 
         .info-box {
@@ -541,9 +550,9 @@ function telechargerPDF() {
         margin: [10, 10, 10, 10],
         filename: `CONTRAT_DISTRIBUTION_${nom}_${prenom}_${new Date().getFullYear()}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
+        html2canvas: { scale: 2, useCORS: true, allowTaint: true },
         jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' },
-        pagebreak: { mode: ['css', 'legacy'] }
+        pagebreak: { mode: 'avoid-all', before: 'page-break-before', after: 'page-break-after', avoid: 'div.no-break' }
     };
 
     html2pdf().set(opt).from(element).save();
