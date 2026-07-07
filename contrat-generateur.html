@@ -546,16 +546,33 @@ function telechargerPDF() {
     const nom = document.getElementById('nom').value;
     const element = document.getElementById('contratContent');
 
+    // Créer une copie du contenu pour éviter les modifications
+    const clonedElement = element.cloneNode(true);
+    
     const opt = {
         margin: [10, 10, 10, 10],
         filename: `CONTRAT_DISTRIBUTION_${nom}_${prenom}_${new Date().getFullYear()}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, allowTaint: true },
-        jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' },
-        pagebreak: { mode: 'avoid-all', before: 'page-break-before', after: 'page-break-after', avoid: 'div.no-break' }
+        html2canvas: { 
+            scale: 2, 
+            useCORS: true, 
+            allowTaint: true,
+            logging: false,
+            backgroundColor: '#ffffff'
+        },
+        jsPDF: { 
+            orientation: 'portrait', 
+            unit: 'mm', 
+            format: 'a4',
+            compress: true
+        },
+        pagebreak: { 
+            mode: 'legacy',
+            before: '.page-break'
+        }
     };
 
-    html2pdf().set(opt).from(element).save();
+    html2pdf().set(opt).from(clonedElement).save();
 }
 
 function recommencer() {
