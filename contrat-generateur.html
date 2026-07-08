@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Contrat - BIG BLACK DISTRIBUTION</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1em;
+            color: #ccc;
+        }
+
+        /* PAGE 1 - FORMULAIRE */
+        .form-page {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-page h2 {
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #1a1a2e;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 1em;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        button {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* PAGE 2 - APERÇU */
+        .preview-page {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: none;
+        }
+
+        .preview-page.active {
+            display: block;
+        }
+
+        .preview-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .preview-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .contrat-content {
+            padding: 40px;
+            font-size: 0.95em;
+            line-height: 1.7;
+            color: #333;
+        }
+
+        .contrat-content h3 {
+            text-align: center;
+            font-size: 1.3em;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .contrat-content p {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+
+        .contrat-content h4 {
+            font-weight: 700;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        .contrat-content ul {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        .contrat-content li {
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        .highlight-section {
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            padding-left: 20px;
+            background-color: #ecf0f1;
+            margin: 15px 0;
+        }
+
+        .signature-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #333;
+        }
+
+        .signature-block {
+            text-align: center;
+        }
+
+        .signature-block p {
+            margin: 8px 0;
+            font-size: 0.9em;
+        }
+
+        .signature-block strong {
+            display: block;
+            margin-bottom: 20px;
+            font-size: 1em;
+        }
+
+        .signature-line {
+            margin-top: 40px;
+            border-top: 1px solid #333;
+            padding-top: 5px;
+            height: 30px;
+        }
+
+        .buttons-footer {
+            display: flex;
+            gap: 15px;
+            padding: 30px 40px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn-download {
+            background-color: #27ae60;
+            color: white;
+            flex: 1;
+            padding: 16px;
+        }
+
+        .btn-download:hover {
+            background-color: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-modify {
+            background-color: #e74c3c;
+            color: white;
+            flex: 1;
+            padding: 16px;
+        }
+
+        .btn-modify:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .date-display {
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            font-size: 1em;
+        }
+
+        .info-box {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .info-box p {
+            color: #1565c0;
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .form-page {
+                padding: 25px;
+            }
+
+            .contrat-content {
+                padding: 25px;
+                font-size: 1em;
+            }
+
+            .contrat-content h3 {
+                font-size: 1.2em;
+            }
+
+            .signature-section {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .buttons-footer {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🎵 Générateur de Contrat Distribution</h1>
+        <p>BOMAYE MUSIK - BIG BLACK DISTRIBUTION</p>
+    </header>
+
+    <!-- PAGE 1 - FORMULAIRE -->
+    <div class="form-page" id="formPage">
+        <h2>Vos Informations</h2>
+        
+        <div class="form-group">
+            <label for="prenom">Prénom <span class="required">*</span></label>
+            <input type="text" id="prenom" placeholder="Ex: Jean" required>
+        </div>
+
+        <div class="form-group">
+            <label for="nom">Nom <span class="required">*</span></label>
+            <input type="text" id="nom" placeholder="Ex: Dupont" required>
+        </div>
+
+        <div class="form-group">
+            <label for="pseudo">Pseudo / Nom d'Artiste</label>
+            <input type="text" id="pseudo" placeholder="Ex: JD Music">
+        </div>
+
+        <div class="form-group">
+            <label for="mail">Email <span class="required">*</span></label>
+            <input type="email" id="mail" placeholder="Ex: artiste@email.com" required>
+        </div>
+
+        <div class="form-group">
+            <label for="adresse">Adresse du Domicile <span class="required">*</span></label>
+            <input type="text" id="adresse" placeholder="Ex: 123 Avenue des Arts, Kinshasa" required>
+        </div>
+
+        <div class="info-box">
+            <p><strong>ℹ️ Info:</strong> Vos données ne sont pas stockées. Tout se passe localement dans votre navigateur.</p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-primary" onclick="genererContrat()">📋 Générer le Contrat</button>
+        </div>
+    </div>
+
+    <!-- PAGE 2 - APERÇU -->
+    <div class="preview-page" id="previewPage">
+        <div class="preview-header">
+            <h2>📄 Aperçu du Contrat</h2>
+        </div>
+
+        <div class="contrat-content" id="contratContent">
+            <!-- Contenu généré ici -->
+        </div>
+
+        <div class="buttons-footer">
+            <button class="btn-download" onclick="telechargerPDF()">⬇️ Télécharger le PDF</button>
+            <button class="btn-modify" onclick="retournerAuFormulaire()">✏️ Modifier les Infos</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function getTodayDate() {
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
+function genererContrat() {
+    const prenom = document.getElementById('prenom').value.trim();
+    const nom = document.getElementById('nom').value.trim();
+    const pseudo = document.getElementById('pseudo').value.trim();
+    const mail = document.getElementById('mail').value.trim();
+    const adresse = document.getElementById('adresse').value.trim();
+
+    if (!prenom || !nom || !mail || !adresse) {
+        alert('Veuillez remplir tous les champs obligatoires (*)');
+        return;
+    }
+
+    const nomArtiste = pseudo || `${prenom} ${nom}`;
+    
+    // Générer le contenu
+    genererContenuContrat(prenom, nom, nomArtiste, mail, adresse);
+
+    // Afficher la page de prévisualisation
+    document.getElementById('formPage').style.display = 'none';
+    document.getElementById('previewPage').classList.add('active');
+
+    // Scroller vers le haut
+    window.scrollTo(0, 0);
+}
+
+function genererContenuContrat(prenom, nom, nomArtiste, mail, adresse) {
+    const content = `
+        <div class="date-display">
+            📅 Fait à Kinshasa, le <strong>${getTodayDate()}</strong>
+        </div>
+
+        <h3>CONTRAT DE DISTRIBUTION NUMÉRIQUE</h3>
+        
+        <p><strong>Entre les soussignés :</strong></p>
+
+        <p><strong>MUKONGO BUSINESS SARL,</strong></p>
+        <p style="font-size: 0.9em; margin-bottom: 20px;">
+            Société à Responsabilité Limitée (SARL) au capital de 30.000 dollars,<br>
+            Siège social : 5, avenue Pacifique, quartier Funa, commune Barumbu, ville Kinshasa – République Démocratique du Congo,<br>
+            Immatriculée au R.C.C.M. sous le numéro CD/KNG/RCCM/13-B-0311,<br>
+            Numéro d'identification nationale : 01-9-N73778D,<br>
+            Numéro d'immatriculation au service national des impôts (DGI) : A1307474P,<br>
+            Par son enseigne de distribution numérique dénommée « BIG BLACK DISTRIBUTION »,<br>
+            Représentée par son Gérant, MAYA MUESA MOANDA, dûment habilité à l'effet,
+        </p>
+        <p>Ci-après désignée « BIG BLACK DISTRIBUTION », d'une part ;</p>
+
+        <p><strong>ET</strong></p>
+
+        <div class="highlight-section">
+            <p style="margin-bottom: 8px;"><strong>Nom :</strong> <u>${nom}</u></p>
+            <p style="margin-bottom: 8px;"><strong>Prénom :</strong> <u>${prenom}</u></p>
+            <p style="margin-bottom: 8px;"><strong>Pseudo :</strong> <u>${nomArtiste}</u></p>
+            <p style="margin-bottom: 8px;"><strong>Email :</strong> <u>${mail}</u></p>
+            <p style="margin-bottom: 0;"><strong>Adresse du Domicile :</strong> <u>${adresse}</u></p>
+        </div>
+
+        <p>Ci-après désignée « L'artiste », d'autre part</p>
+
+        <h4>PRÉAMBULE</h4>
+        <p>La Société de Distribution BIG BLACK DISTRIBUTION, représentée par MUKONGO BUSINESS SARL, est une entreprise spécialisée dans la distribution numérique de contenus musicaux et vidéo. Ce contrat a pour objet de définir les modalités de distribution numérique des œuvres de l'Artiste, « <u>${nomArtiste}</u> », sur les plateformes de streaming et de téléchargement.</p>
+
+        <p>Le présent contrat est conclu pour une durée initiale de <u>un (1) an</u> à compter de la date de signature. Ce contrat sera tacitement reconduit chaque année, sauf si l'Artiste ou son équipe notifie par écrit sa volonté de résilier le contrat au moins un (1) mois (30 jours) avant la fin de la période en cours.</p>
+
+        <h4>Article 3 : Obligations des Parties</h4>
+        
+        <p><strong>3.1 Obligations de la Société de Distribution (BIG BLACK DISTRIBUTION) :</strong></p>
+        <ul>
+            <li>BIG BLACK DISTRIBUTION s'engage à mettre en place la distribution numérique des œuvres de l'Artiste sur les plateformes de streaming et de téléchargement.</li>
+            <li>BIG BLACK DISTRIBUTION se charge de la gestion des droits numériques, de la promotion de la musique de l'Artiste et de la collecte des royalties générées par les ventes et écoutes.</li>
+            <li>BIG BLACK DISTRIBUTION fournira à l'Artiste un rapport semestriel détaillant les revenus générés par les œuvres de l'Artiste, incluant le <strong>1er semestre (janvier à juin)</strong> et le <strong>2ème semestre (juillet à décembre)</strong>.</li>
+        </ul>
+
+        <p><strong>3.2 Obligations de l'Artiste :</strong></p>
+        <ul>
+            <li>L'Artiste s'engage à fournir à BIG BLACK DISTRIBUTION les œuvres originales et les droits nécessaires pour permettre la distribution numérique de ses créations.</li>
+            <li>L'Artiste consent à la promotion et à la distribution de ses œuvres sur les plateformes numériques, et ce, sans opposition pendant la durée du contrat.</li>
+            <li>L'Artiste s'engage à respecter les termes de ce contrat et à collaborer avec BIG BLACK DISTRIBUTION dans le cadre de la commercialisation de ses œuvres.</li>
+        </ul>
+
+        <h4>Article 4 : Partage des Revenus</h4>
+        <p>Les revenus générés par la distribution numérique des œuvres de l'Artiste seront partagés selon les modalités suivantes :</p>
+        <ul>
+            <li><strong>BIG BLACK DISTRIBUTION (Mukongo Business) :</strong> 30% des revenus nets générés</li>
+            <li><strong>Artiste ${nomArtiste} :</strong> 70% des revenus reçus</li>
+        </ul>
+
+        <h4>Article 5 : Modalités de Paiement</h4>
+        <p><strong>Relevé du 1er semestre :</strong> Les revenus générés entre <strong>janvier et juin</strong> seront calculés et un relevé détaillant ces revenus sera fourni aux parties concernées. Le paiement des montants dus (Agent, Manager, Artiste) sera effectué dans un délai de 90 jours après la réception du relevé, soit courant septembre.</p>
+        <p><strong>Relevé du 2ème semestre :</strong> Les revenus générés entre <strong>juillet et décembre</strong> seront calculés et un relevé détaillant ces revenus sera fourni aux parties concernées. Le paiement des montants dus (Agent, Manager, Artiste) sera effectué dans un délai de 90 jours après la réception du relevé, soit courant mars.</p>
+
+        <h4>Article 6 : Promotion et Marketing</h4>
+        <p>L'Artiste et son équipe (Agent et Manager) s'engagent à promouvoir activement ses œuvres, notamment à travers des interviews, des performances live, des vidéos promotionnelles, les réseaux sociaux, etc.</p>
+
+        <h4>Article 7 : Propriété des Œuvres</h4>
+        <ul>
+            <li>L'Artiste (ou le producteur) demeure le propriétaire des droits d'auteur sur ses œuvres musicales. Cependant, BIG BLACK DISTRIBUTION est autorisée à exploiter ces œuvres sur les plateformes numériques pendant la durée du contrat.</li>
+            <li>L'artiste (ou le producteur) garantit détenir tous les droits nécessaires pour permettre la distribution numérique des œuvres.</li>
+        </ul>
+
+        <h4>Article 8 : Conditions Financières – Dépôt – Droits voisins</h4>
+        
+        <p><strong>A. Seuil minimum de paiement :</strong> Le Distributeur procédera au paiement des sommes dues au Distribué uniquement lorsque le montant net des revenus générés aura atteint ou dépassé un seuil minimum de cinquante dollars américains (50 USD). Tant que ce seuil n'est pas atteint, les revenus seront automatiquement reportés sur la période comptable suivante et cumulés jusqu'à atteindre le montant minimum requis.</p>
+
+        <p><strong>B. Dépôt des œuvres auprès de la SACEM :</strong> Le Distributeur s'engage à procéder au dépôt des œuvres objet du présent contrat auprès de la SACEM ou de tout autre organisme de gestion collective compétent, conformément aux dispositions légales et réglementaires en vigueur.</p>
+
+        <p><strong>C. Droits voisins :</strong> Les parties conviennent que les revenus issus des droits voisins générés par l'exploitation des enregistrements concernés seront répartis comme suit : 70% au bénéfice du Distribué (Artiste/Producteur) ; 30% au bénéfice du Distributeur.</p>
+
+        <h4>Article 9 : Résiliation du Contrat</h4>
+        <p>La résiliation interviendra après : l'envoi d'une mise en demeure écrite, par lettre ou courrier électronique avec accusé de réception, et l'absence de régularisation du manquement dans un délai maximum de trente (30) jours à compter de la réception de ladite mise en demeure.</p>
+
+        <h4>Article 10 : Revenus post-résiliation et transfert de distribution</h4>
+        <p>En cas de résiliation du présent contrat, BIG BLACK DISTRIBUTION cessera toute distribution active des œuvres de l'Artiste sur les plateformes numériques. L'Artiste continuera à percevoir toutes les royalties générées par les œuvres, y compris celles provenant d'écoutes ou ventes survenues après la résiliation, jusqu'à ce que toutes les plateformes aient été mises à jour. Le distributeur s'engage à collecter et reverser ces revenus à l'Artiste selon un calendrier conforme aux modalités du contrat.</p>
+
+        <h4>Article 11 : Confidentialité</h4>
+        <p>Les parties s'engagent à maintenir la confidentialité sur toutes les informations relatives à ce contrat, y compris les informations financières et commerciales, pendant toute la durée du contrat et après sa résiliation.</p>
+
+        <h4>Article 12 : Litiges et Juridiction</h4>
+        <p>En cas de litige relatif à l'interprétation ou à l'exécution du présent contrat, les parties s'engagent à tenter de résoudre le conflit à l'amiable. Si aucune solution amiable n'est trouvée, le litige sera soumis à la juridiction compétente de Kinshasa, République Démocratique du Congo.</p>
+
+        <h4>Article 13 : Dispositions Finales</h4>
+        <p>Le présent contrat constitue l'intégralité de l'accord entre les parties. Toute modification ou ajout au présent contrat devra être fait par écrit et signé par toutes les parties.</p>
+
+        <div class="signature-section">
+            <div class="signature-block">
+                <strong>Pour BIG BLACK DISTRIBUTION :</strong>
+                <p>Nom : MAYA MUESA MOANDA</p>
+                <p>Titre : Gérant</p>
+                <div class="signature-line"></div>
+            </div>
+            <div class="signature-block">
+                <strong>Pour l'Artiste :</strong>
+                <p>Nom : ${nomArtiste}</p>
+                <p>Email : ${mail}</p>
+                <div class="signature-line"></div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('contratContent').innerHTML = content;
+}
+
+function telechargerPDF() {
+    const prenom = document.getElementById('prenom').value;
+    const nom = document.getElementById('nom').value;
+    const element = document.getElementById('contratContent');
+
+    const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `CONTRAT_DISTRIBUTION_${nom}_${prenom}_${new Date().getFullYear()}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+            scale: 2, 
+            useCORS: true, 
+            allowTaint: true,
+            logging: false,
+            backgroundColor: '#ffffff'
+        },
+        jsPDF: { 
+            orientation: 'portrait', 
+            unit: 'mm', 
+            format: 'a4'
+        },
+        pagebreak: { 
+            mode: 'legacy'
+        }
+    };
+
+    html2pdf().set(opt).from(element).save();
+}
+
+function retournerAuFormulaire() {
+    document.getElementById('previewPage').classList.remove('active');
+    document.getElementById('formPage').style.display = 'block';
+    window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>
