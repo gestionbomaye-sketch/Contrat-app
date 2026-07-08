@@ -186,6 +186,12 @@
             overflow: hidden;
         }
 
+        @media (max-width: 768px) {
+            .preview-container {
+                border-radius: 8px;
+            }
+        }
+
         .preview-header {
             padding: 20px;
             background-color: #f8f9fa;
@@ -199,6 +205,66 @@
             background: white;
             font-size: 0.9em;
             line-height: 1.6;
+        }
+
+        /* Responsive pour mobile */
+        @media (max-width: 768px) {
+            .preview-content {
+                padding: 20px;
+                font-size: 1em;
+                line-height: 1.8;
+            }
+
+            .preview-content h3 {
+                font-size: 1.4em !important;
+                margin-bottom: 20px;
+            }
+
+            .preview-content h4 {
+                font-size: 1.1em !important;
+                margin-top: 20px;
+                margin-bottom: 15px;
+            }
+
+            .preview-content p {
+                font-size: 1em;
+                margin-bottom: 15px;
+            }
+
+            .preview-content ul {
+                margin-left: 20px;
+                font-size: 1em;
+            }
+
+            .preview-content li {
+                margin-bottom: 12px;
+                line-height: 1.6;
+            }
+
+            .highlight-section {
+                padding: 15px;
+                font-size: 1em;
+            }
+
+            .signature-section {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .preview-content {
+                padding: 15px;
+                font-size: 0.95em;
+            }
+
+            .preview-content h3 {
+                font-size: 1.3em !important;
+            }
+
+            .preview-content h4 {
+                font-size: 1.05em !important;
+            }
         }
 
         .preview-content h3 {
@@ -546,16 +612,40 @@ function telechargerPDF() {
     const nom = document.getElementById('nom').value;
     const element = document.getElementById('contratContent');
 
+    // Créer une copie du contenu pour éviter les modifications
+    const clonedElement = element.cloneNode(true);
+    
+    // Forcer la largeur pour mobile
+    clonedElement.style.width = '100%';
+    clonedElement.style.display = 'block';
+    
     const opt = {
         margin: [10, 10, 10, 10],
         filename: `CONTRAT_DISTRIBUTION_${nom}_${prenom}_${new Date().getFullYear()}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, allowTaint: true },
-        jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' },
-        pagebreak: { mode: 'avoid-all', before: 'page-break-before', after: 'page-break-after', avoid: 'div.no-break' }
+        html2canvas: { 
+            scale: 3,
+            useCORS: true, 
+            allowTaint: true,
+            logging: false,
+            backgroundColor: '#ffffff',
+            windowWidth: 1200,
+            windowHeight: 1600
+        },
+        jsPDF: { 
+            orientation: 'portrait', 
+            unit: 'mm', 
+            format: 'a4',
+            compress: false
+        },
+        pagebreak: { 
+            mode: 'legacy',
+            before: '.page-break',
+            avoid: 'h4'
+        }
     };
 
-    html2pdf().set(opt).from(element).save();
+    html2pdf().set(opt).from(clonedElement).save();
 }
 
 function recommencer() {
